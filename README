@@ -1,37 +1,80 @@
-- The hardware
-  - Server
-    OS: Ubuntu 11.04
-        Linux fermi 2.6.38-8-generic #42-Ubuntu SMP Mon Apr 11 03:31:24 UTC 2011 x86_64 x86_64 x86_64 GNU/Linux
-    Processor: 1.66 GHz Intel Core 2 Duo
-    Memory:    2.GB
+- Background
+  The purpose of the project is to compare the performance between Node.JS and EventMachine for the HTTP
+  traffic.
+  
+  The plan is to test the following scenarios:
+
+  - The server response against the fast http request.
+  - The server response against the slow http request. E.g. slow network link or big file upload.
+
+- Summary
+  Other than the performance difference doing the sequential request (Test 1), the http server implemented in 
+  Node and EventMachine are really close, namely Test {2,3,4} below.
+
+             EM       Node
+            =====     ====
+    Test 1   20.9     4.3
+    Test 2   2.4      2.4
+    Test 3   2.5      2.5
+    Test 4   3.8      4.1
+
+- Configuration
  
-  - Client
-    OS: Mac OSX 10.6.7, 
+  - The hardware
+    - Server
+      OS: Ubuntu 11.04
+        Linux fermi 2.6.38-8-generic #42-Ubuntu SMP Mon Apr 11 03:31:24 UTC 2011 x86_64 x86_64 x86_64 GNU/Linux
+      Processor: 1.66 GHz Intel Core 2 Duo
+      Memory:    2.GB
+ 
+    - Client
+      OS: Mac OSX 10.6.7, 
         Darwin Wens-MacBook-Pro.local 10.7.3 Darwin Kernel Version 10.7.3: Sun Mar  6 13:37:56 PST 2011; 	
              root:xnu-1504.14.2~1/RELEASE_X86_64 x86_64
-    Processor: 2 GHz Intel Core i7
-    Memory:    8 GB 1067MHz DDR3
+      Processor: 2 GHz Intel Core i7
+      Memory:    8 GB 1067MHz DDR3
 
-  - Network
-    The client and the server communicate through a wireless LAN link 54Mbps.
+    - Network
+      The client and the server communicate through a wireless LAN link 54Mbps.
 
-- The software
-  - Client
-    - Install httperf (0.9.0) on the client
+  - The software
+    - Client
+      - Install httperf (0.9.0) on the client
 
-    Before installation, depends on the system settings you have on your OSX installation, you may need to modify 
-    /usr/include/sys/_structs.h to increase the FD_SETSIZE, e.g. from 1024 to 10240. 
+      Before installation, depends on the system settings you have on your OSX installation, you may need to modify 
+      /usr/include/sys/_structs.h to increase the FD_SETSIZE, e.g. from 1024 to 10240. 
 
-    - Before running httperf as root, tune the system configuration temporarily.
+      - Before running httperf as root, tune the system configuration temporarily.
 
-    > sudo -i
-    > sysctl -w kern.maxfiles=65536 kern.maxfilesperproc=32768
-    > ulimit -n 12000
+      > sudo -i
+      > sysctl -w kern.maxfiles=65536 kern.maxfilesperproc=32768
+      > ulimit -n 12000
 
-  - Server
-    - Ruby version: ruby 1.9.2p180
-    - Install node.JS (0.4.7) and eventmachine (0.12.10), eventmachine_httpserver(0.2.1) on the server.
- 
+    - Server
+      - Ruby version: ruby 1.9.2p180
+      - Install node.JS (0.4.7) and eventmachine (0.12.10), eventmachine_httpserver(0.2.1) on the server.
+      - The Node version uses the 'http' module coming with the node installation. The EventMachine version
+        uses the http server from the eventmachine project, https://github.com/eventmachine/evma_httpserver.
+        Since the HTTP server has overhead, e.g. html parsing, in addition to the underlying framework, the
+        server implementation coming with Node and EventMachine was used.
+        The server code is copied from the documentation of Node and EventMachine.
+
+- Source code
+  - EventMachine version: simple/em/server.rb
+  - Node version: simple/node/server.js  
+
 - Test result
-  The httperf benchmark results are under simple/em/perf, and simple/node/perf
-  
+  - Response time graph: simple/em_vs_node.pdf, which is based on the numbers listed in simple/em_vs_node.numbers.
+  - The httperf benchmark results are under simple/em/perf, and simple/node/perf
+  - sequentail_6000.txt (Test 1): this test includes the total of 6000 connections, each connection is created upon 
+                         the tear-down of the previous connection, one at a time. One request is made within
+                         each connection.
+  - concurrent_2000_20.txt (Test 2): this test includes a total of 2000 connections, the ramp-up of the request is 
+                         20 new connections per second. One request is made within each connection.
+  - concurrent_2000_100.txt (Test 3): this test includes a total of 2000 connections, the ramp-up of the client is
+                         100 new connections per second. One request is made within each connection.
+  - concurrent_3000_200.txt (Test 4): this test includes a total of 3000 connections, the ramp-up of the client is 
+                         200 new connections per second. One request is made within each connection.
+
+- TODO
+  - Finish the tests for the 2nd scenario, the slow client connection.
