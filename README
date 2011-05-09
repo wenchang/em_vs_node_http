@@ -1,0 +1,37 @@
+- The hardware
+  - Server
+    OS: Ubuntu 11.04
+        Linux fermi 2.6.38-8-generic #42-Ubuntu SMP Mon Apr 11 03:31:24 UTC 2011 x86_64 x86_64 x86_64 GNU/Linux
+    Processor: 1.66 GHz Intel Core 2 Duo
+    Memory:    2.GB
+ 
+  - Client
+    OS: Mac OSX 10.6.7, 
+        Darwin Wens-MacBook-Pro.local 10.7.3 Darwin Kernel Version 10.7.3: Sun Mar  6 13:37:56 PST 2011; 	
+             root:xnu-1504.14.2~1/RELEASE_X86_64 x86_64
+    Processor: 2 GHz Intel Core i7
+    Memory:    8 GB 1067MHz DDR3
+
+  - Network
+    The client and the server communicate through a wireless LAN link 54Mbps.
+
+- The software
+  - Client
+    - Install httperf (0.9.0) on the client
+
+    Before installation, depends on the system settings you have on your OSX installation, you may need to modify 
+    /usr/include/sys/_structs.h to increase the FD_SETSIZE, e.g. from 1024 to 10240. 
+
+    - Before running httperf as root, tune the system configuration temporarily.
+
+    > sudo -i
+    > sysctl -w kern.maxfiles=65536 kern.maxfilesperproc=32768
+    > ulimit -n 12000
+
+  - Server
+    - Ruby version: ruby 1.9.2p180
+    - Install node.JS (0.4.7) and eventmachine (0.12.10), eventmachine_httpserver(0.2.1) on the server.
+ 
+- Test result
+  The httperf benchmark results are under simple/em/perf, and simple/node/perf
+  

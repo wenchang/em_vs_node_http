@@ -1,0 +1,23 @@
+httperf --hog --timeout=3 --client=0/1 --server=fermi --port=2011 --uri=/ --rate=200 --send-buffer=4096 --recv-buffer=16384 --num-conns=3000 --num-calls=1
+Maximum connect burst length: 1
+
+Total: connections 3000 requests 3000 replies 3000 test-duration 15.002 s
+
+Connection rate: 200.0 conn/s (5.0 ms/conn, <=11 concurrent connections)
+Connection time [ms]: min 5.4 avg 10.8 max 997.3 median 9.5 stddev 19.1
+Connection time [ms]: connect 3.6
+Connection length [replies/conn]: 1.000
+
+Request rate: 200.0 req/s (5.0 ms/req)
+Request size [B]: 58.0
+
+Reply rate [replies/s]: min 199.8 avg 199.9 max 200.2 stddev 0.2 (3 samples)
+Reply time [ms]: response 4.1 transfer 3.1
+Reply size [B]: header 97.0 content 10.0 footer 2.0 (total 109.0)
+Reply status: 1xx=0 2xx=3000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 2.35 system 12.65 (user 15.7% system 84.3% total 100.0%)
+Net I/O: 32.2 KB/s (0.3*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0

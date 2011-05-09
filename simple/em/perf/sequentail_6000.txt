@@ -1,0 +1,23 @@
+httperf --hog --timeout=5 --client=0/1 --server=fermi --port=2012 --uri=/ --send-buffer=4096 --recv-buffer=16384 --num-conns=6000 --num-calls=1
+Maximum connect burst length: 1
+
+Total: connections 6000 requests 6000 replies 6000 test-duration 255.914 s
+
+Connection rate: 23.4 conn/s (42.7 ms/conn, <=1 concurrent connections)
+Connection time [ms]: min 4.2 avg 42.7 max 1021.9 median 11.5 stddev 54.1
+Connection time [ms]: connect 21.7
+Connection length [replies/conn]: 1.000
+
+Request rate: 23.4 req/s (42.7 ms/req)
+Request size [B]: 58.0
+
+Reply rate [replies/s]: min 5.6 avg 23.5 max 186.0 stddev 40.7 (51 samples)
+Reply time [ms]: response 20.9 transfer 0.0
+Reply size [B]: header 66.0 content 10.0 footer 0.0 (total 76.0)
+Reply status: 1xx=0 2xx=6000 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 48.19 system 207.72 (user 18.8% system 81.2% total 100.0%)
+Net I/O: 3.1 KB/s (0.0*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
